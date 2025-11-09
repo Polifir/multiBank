@@ -21,14 +21,22 @@ import { fetchSummary } from "@/service/summary"
 
 export const description = "A donut chart with text"
 
+
+
+export function ChartPieDonutText() {
+
+  
     const { data: summary} = useQuery({
     queryKey: ['summary'],
     queryFn: fetchSummary,
     });
 
    const {abank, vbank, sbank } = summary.balance_by_bank
+  const totalVisitors = React.useMemo(() => {
+    return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
+  }, [])
 
-const chartData = [
+  const chartData = [
   { browser: "А банк", visitors: abank, fill: "#EC4899" },
   { browser: "В банк", visitors: vbank, fill: "#3B82F6" },
   { browser: "С банк", visitors: sbank, fill: "#10B981" },
@@ -49,11 +57,6 @@ const chartConfig = {
     color: "#10B981",
   }
 }
-
-export function ChartPieDonutText() {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
-  }, [])
 
   return (
     <Card className="relative bg-linear-to-br from-balck-500/10 to-black-500/10">

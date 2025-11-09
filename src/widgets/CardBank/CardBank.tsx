@@ -8,15 +8,13 @@ interface ICardBank {
 
 export const CardBank = ({title, value, color}: ICardBank) => {
 
-
-
     return (
       
      <Card className={color}>
         <CardHeader>
           <CardDescription>{title}</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {value ? `₽${value}` : 'Нет данных('}
+            {value ? `₽ ${value}` : 'Нет данных('}
           </CardTitle>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">

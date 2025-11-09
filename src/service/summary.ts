@@ -1,4 +1,4 @@
-const api = '/api/users'
+const api = '/backend/api/v1/summary'
 
 export const fetchSummary = async () => {
   const response = await fetch(api);

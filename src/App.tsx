@@ -6,6 +6,7 @@ import { MainGraphRadial } from "./widgets/MainGraphRadial/MainGraphRadial"
 import { MainBankInfo } from "./widgets/MainBankInfo/MainBankInfo"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { queryClient } from "./lib/react-query"
+import { TableOperation } from "./customComponents/TableOperation"
 function App() {
 
 
@@ -19,6 +20,7 @@ function App() {
                     <div style={{margin: '10px auto', gap: '10px'}}>
                       <MainBankInfo/>
                       <MainGraphRadial/>
+                      <TableOperation/>
                     </div>
                   </div>
                 </ThemeProvider>
