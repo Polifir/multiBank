@@ -165,7 +165,7 @@ const { mutate, isPending, error, reset } = useTransactionSearch();
         </TableRow>
       </TableHeader>
       <TableBody>
-       { searchResults.map((e: ITransaction) => (
+       { searchResults ? searchResults.map((e: ITransaction) => (
           <TableRow key={e.id}>
             <TableCell className="font-medium">{bankname[e.bankId]}</TableCell>
             <TableCell>{formatDate(e.date)}</TableCell>
@@ -174,7 +174,7 @@ const { mutate, isPending, error, reset } = useTransactionSearch();
             <TableCell>{e.description}</TableCell>
             <TableCell className="text-right">{transaction[e.status]}</TableCell>
           </TableRow>
-        ))}
+        )) : <div>Нет данных</div>}
       </TableBody>
     </Table>
    {searchResults && searchResults.totalPages > 1 && (
@@ -194,7 +194,6 @@ const { mutate, isPending, error, reset } = useTransactionSearch();
                     />
                 </PaginationItem>
                 
-                {/* Простые номера страниц */}
                 {Array.from({ length: Math.min(5, searchResults.totalPages) }, (_, i) => (
                     <PaginationItem key={i}>
                         <PaginationLink
