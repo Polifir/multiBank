@@ -174,7 +174,7 @@ const { mutate, isPending, error, reset } = useTransactionSearch();
             <TableCell>{e.description}</TableCell>
             <TableCell className="text-right">{transaction[e.status]}</TableCell>
           </TableRow>
-        )) : <div>Нет данных</div>}
+        )) : <></>}
       </TableBody>
     </Table>
    {searchResults && searchResults.totalPages > 1 && (
