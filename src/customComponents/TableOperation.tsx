@@ -1,3 +1,4 @@
+
 import { Card,} from "@/components/ui/card"
 import {
   Table,
@@ -9,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { fetchSummary } from "@/service/summary";
+import { ExportPdfButton } from "@/widgets/ExportPDF/ExportPDF";
 import { useQuery } from "@tanstack/react-query";
 export type BankId = 'sbank' |'abank' | 'vbank';
   const bankname = {
@@ -68,7 +70,12 @@ export const TableOperation =() => {
   return (
 
     <Card className="items-center ml-2 mr-5 mt-2" >
-
+          <div className="flex justify-between items-center p-4 border-b">
+                <h2 className="text-lg font-semibold">Транзакции</h2>
+                <div className="flex gap-2">
+                    <ExportPdfButton />
+                </div>
+            </div>
       <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader>
