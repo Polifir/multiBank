@@ -1,12 +1,10 @@
+// hooks/useExportPdf.ts
 import { useMutation } from '@tanstack/react-query';
 
 const exportToPdf = async (): Promise<Blob> => {
-  const response = await fetch('http://localhost:8080/api/v1/transactions/export/pdf', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({}),
+  const response = await fetch('/backend/api/v1/transactions/export/pdf', {
+    method: 'GET', // Меняем на GET
+    // headers не обязательны для GET запроса
   });
 
   if (!response.ok) {

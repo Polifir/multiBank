@@ -1,4 +1,4 @@
-// components/ExportPdfButton.tsx
+
 import { Button } from "@/components/ui/button";
 import { useExportPdf } from "@/hooks/usePDF";
 import { Download, Loader2 } from "lucide-react";
@@ -11,7 +11,7 @@ export const ExportPdfButton = ({ disabled = false }: ExportPdfButtonProps) => {
   const { mutate, isPending } = useExportPdf();
 
   const handleExport = () => {
-    mutate(undefined, { // Не передаем никакие фильтры
+    mutate(undefined, {
       onSuccess: (blob) => {
         // Создаем URL для скачивания
         const url = window.URL.createObjectURL(blob);
