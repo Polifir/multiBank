@@ -13,6 +13,7 @@ export interface TransactionsResponse {
 export interface ISearchFilters {
   bankIds: string[];
   transactionTypes: string[];
+  recent_transactions: any,
   dateFrom: string | null;
   dateTo: string | null;
   page?: number;

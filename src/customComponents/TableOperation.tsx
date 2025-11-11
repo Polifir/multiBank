@@ -1,11 +1,4 @@
 import { Card,} from "@/components/ui/card"
-import {Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,} from "@/components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -15,10 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { TransactionFilters } from "./Filter";
-import { useState } from "react";
-import { useTransactionSearch, type ISearchFilters } from "@/hooks/useTranc";
-import { Skeleton } from "@/components/ui/skeleton";
+import { fetchSummary } from "@/service/summary";
+import { useQuery } from "@tanstack/react-query";
 export type BankId = 'sbank' |'abank' | 'vbank';
   const bankname = {
     sbank: 'Умный', 
@@ -51,34 +42,6 @@ export interface ITransaction {
     bankId: BankId;
     category: string;
 }
-const data: ITransaction[]= [
-          {
-            "id": "tx-team219-4-m0-1",
-            "accountId": null,
-            "date": "2025-10-28T18:00:16.685534Z",
-            "amount": 143650.92,
-            "currency": 'RUB',
-            "description": "💼 Зарплата",
-            "type": 'CREDIT',
-            "status": "Booked",
-            "bankId": 'sbank',
-            "category": "Зачисления"
-        },
-        {
-            "id": "tx-team219-4-m0-1",
-            "accountId": null,
-            "date": "2025-10-28T18:00:16.685534Z",
-            "amount": 143650.92,
-            "currency": 'RUB',
-            "description": "💼 Зарплата",
-            "type": 'CREDIT',
-            "status": "Booked",
-            "bankId": 'sbank',
-            "category": "Зачисления"
-        },
-    
-  ]
-
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
@@ -95,63 +58,17 @@ const formatDate = (dateString: string) => {
 
 
 export const TableOperation =() => {
-  const [searchResults, setSearchResults] = useState<any| null>(null);
-    const [currentFilters, setCurrentFilters] = useState<ISearchFilters>({
-        bankIds: [],
-        transactionTypes: [],
-        dateFrom: null,
-        dateTo: null,
-        page: 0,
-        size: 10,
+
+ const { data: summary} = useQuery({
+    queryKey: ['summary'],
+    queryFn: fetchSummary,
     });
-    
-  
-const { mutate, isPending, error, reset } = useTransactionSearch();
 
-    const handleSearch = (filters: ISearchFilters) => {
-        mutate(filters, {
-            onSuccess: (data) => {
-                setSearchResults(data);
-            },
-            onError: () => {
-                setSearchResults(null);
-            }
-        });
-    };
-        const handlePageChange = (newPage: number) => {
-        const newFilters = {
-            ...currentFilters,
-            page: newPage,
-        };
-        setCurrentFilters(newFilters);
-        mutate(newFilters, {
-            onSuccess: (data) => {
-                setSearchResults(data);
-            },
-            onError: () => {
-                setSearchResults(null);
-            }
-        });
-    };
-
-
-    const handleClearError = () => {
-        reset();
-    };
-
-    const displayData = searchResults?.content || [];
-
-  if(isPending){
-    return(
-      <div>Загрузка</div>
-    )
-  }
 
   return (
 
     <Card className="items-center ml-2 mr-5 mt-2" >
-     <TransactionFilters  onSearch={handleSearch} 
-        isLoading={isPending}/>
+
       <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader>
@@ -165,7 +82,7 @@ const { mutate, isPending, error, reset } = useTransactionSearch();
         </TableRow>
       </TableHeader>
       <TableBody>
-       { searchResults ? searchResults.map((e: ITransaction) => (
+       { summary ? summary.recent_transactions ? summary.recent_transactions .map((e: ITransaction) => (
           <TableRow key={e.id}>
             <TableCell className="font-medium">{bankname[e.bankId]}</TableCell>
             <TableCell>{formatDate(e.date)}</TableCell>
@@ -174,58 +91,9 @@ const { mutate, isPending, error, reset } = useTransactionSearch();
             <TableCell>{e.description}</TableCell>
             <TableCell className="text-right">{transaction[e.status]}</TableCell>
           </TableRow>
-        )) : <></>}
+        )) : <></>: <></>}
       </TableBody>
     </Table>
-   {searchResults && searchResults.totalPages > 1 && (
-    <div className="p-4 border-t">
-        <Pagination>
-            <PaginationContent>
-                <PaginationItem>
-                    <PaginationPrevious 
-                        href="#"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            if (searchResults.currentPage > 0) {
-                                handlePageChange(searchResults.currentPage - 1);
-                            }
-                        }}
-                        className={searchResults.currentPage === 0 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                    />
-                </PaginationItem>
-                
-                {Array.from({ length: Math.min(5, searchResults.totalPages) }, (_, i) => (
-                    <PaginationItem key={i}>
-                        <PaginationLink
-                            href="#"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                handlePageChange(i);
-                            }}
-                            isActive={i === searchResults.currentPage}
-                            className="cursor-pointer"
-                        >
-                            {i + 1}
-                        </PaginationLink>
-                    </PaginationItem>
-                ))}
-                
-                <PaginationItem>
-                    <PaginationNext 
-                        href="#"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            if (searchResults.currentPage < searchResults.totalPages - 1) {
-                                handlePageChange(searchResults.currentPage + 1);
-                            }
-                        }}
-                        className={searchResults.currentPage >= searchResults.totalPages - 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                    />
-                </PaginationItem>
-            </PaginationContent>
-        </Pagination>
-    </div>
-)}
     </Card>
   )
 }
